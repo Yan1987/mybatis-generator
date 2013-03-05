@@ -215,6 +215,11 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$" dialect="MySQL" />
   </component>
+  <component name="TemplateDataLanguageMappings">
+    <file url="file://$PROJECT_DIR$/src/main/templates/java.ftl" dialect="JAVA" />
+    <file url="file://$PROJECT_DIR$/src/main/templates/mapper.ftl" dialect="JAVA" />
+    <file url="file://$PROJECT_DIR$/src/main/templates/xml.ftl" dialect="XML" />
+  </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
   </component>

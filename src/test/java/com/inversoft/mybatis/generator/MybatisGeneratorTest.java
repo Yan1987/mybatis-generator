@@ -15,8 +15,8 @@ public class MybatisGeneratorTest {
   public void all() throws Exception {
     File baseDir = new File("../../libraries/mybatis-generator");
     MyBatisGeneratorOptions options = new MyBatisGeneratorOptions("jdbc:mysql://localhost:3306/mybatis_generator_test",
-      "dev", "dev", "users", "com.test", new File(baseDir, "build/test/src/main/java"), new File(baseDir, "build/test/src/main/resources"),
-      new File(baseDir, "src/main/templates"));
+      "dev", "dev", "users", "com.test", "com.test.mapper", new File(baseDir, "build/test/src/main/java"), new File(baseDir, "build/test/src/main/resources"),
+      new File(baseDir, "src/main/templates"), false);
     MyBatisGenerator generator = new MyBatisGenerator();
     generator.run(options);
   }

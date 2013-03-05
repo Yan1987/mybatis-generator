@@ -57,7 +57,7 @@ public class DatabaseInspector {
       resultSet.close();
 
       // Load the columns for the given table
-      Table table = new Table(options.table, options.javaPackage);
+      Table table = new Table(options.table, options.domainPackage, options.mapperPackage);
       resultSet = metaData.getColumns(null, null, options.table, "%");
       while (resultSet.next()) {
         String name = resultSet.getString("COLUMN_NAME");
@@ -82,7 +82,7 @@ public class DatabaseInspector {
       resultSet = metaData.getExportedKeys(null, null, options.table);
       while (resultSet.next()) {
         String name = resultSet.getString("FKTABLE_NAME");
-        table.associations.add(new Table(name, options.javaPackage));
+        table.associations.add(new Table(name, options.domainPackage, options.mapperPackage));
       }
       resultSet.close();
 

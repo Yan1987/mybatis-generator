@@ -19,13 +19,13 @@ public class DatabaseInspectorTest {
   @Test
   public void all() throws Exception {
     MyBatisGeneratorOptions options = new MyBatisGeneratorOptions("jdbc:mysql://localhost:3306/mybatis_generator_test",
-      "dev", "dev", "users", "com.test", new File("src/main/java"), new File("src/main/resources"), new File("templates"));
+      "dev", "dev", "users", "com.test", "com.test.mapper", new File("src/main/java"), new File("src/main/resources"), new File("templates"), false);
     DatabaseInspector inspector = new DatabaseInspector();
     Table table = inspector.extract(options);
 
     assertEquals(table.name, "users");
-    assertEquals(table.shortJavaClassName, "User");
-    assertEquals(table.fullJavaClassName, "com.test.User");
+    assertEquals(table.shortDomainClassName, "User");
+    assertEquals(table.fullDomainClassName, "com.test.User");
     assertEquals(table.shortName, "u");
     assertEquals(table.columns.size(), 3);
     assertEquals(table.columns.get(0).name, "name");
@@ -55,7 +55,7 @@ public class DatabaseInspectorTest {
     assertEquals(table.associations.get(0).name, "addresses");
     assertEquals(table.associations.get(0).shortName, "a");
     assertEquals(table.associations.get(0).javaFieldName, "addresses");
-    assertEquals(table.associations.get(0).shortJavaClassName, "Address");
-    assertEquals(table.associations.get(0).fullJavaClassName, "com.test.Address");
+    assertEquals(table.associations.get(0).shortDomainClassName, "Address");
+    assertEquals(table.associations.get(0).fullDomainClassName, "com.test.Address");
   }
 }

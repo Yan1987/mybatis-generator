@@ -12,8 +12,8 @@
   ~ Copyright (c) 2013, Inversoft Inc., All Rights Reserved
   -->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="${table.fullJavaClassName}">
-  <resultMap id="${table.shortJavaClassName}" type="${table.fullJavaClassName}">
+<mapper namespace="${table.fullDomainClassName}">
+  <resultMap id="${table.shortDomainClassName}" type="${table.fullDomainClassName}">
     [#if table.primaryKeys?size == 1]
     <id property="${table.primaryKeys[0].javaFieldName}" column="${table.shortName}_${table.primaryKeys[0].name}"/>
     [#else]
@@ -34,16 +34,16 @@
     FROM ${table.name} AS ${table.shortName}
   </sql>
 
-  <select id="findAll" resultMap="${table.shortJavaClassName}">
+  <select id="queryAll" resultMap="${table.shortDomainClassName}">
     <include refid="select"/>
   </select>
 
-  <select id="findById" resultMap="${table.shortJavaClassName}">
+  <select id="queryById" resultMap="${table.shortDomainClassName}">
     <include refid="select"/>
     [@primaryKeyWhereClause table true/]
   </select>
 
-  <insert id="insert" parameterType="${table.fullJavaClassName}" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+  <insert id="insert" parameterType="${table.fullDomainClassName}" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     INSERT INTO ${table.name} (
     [#list table.columns as column]
       ${column.name}[#if column_has_next],[/#if]

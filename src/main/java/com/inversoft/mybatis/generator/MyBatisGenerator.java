@@ -28,7 +28,7 @@ public class MyBatisGenerator {
       options.username,
       options.password,
       options.table,
-      options.javaPackage,
+      options.domainPackage,
       options.javaDirectory,
       options.xmlDirectory,
       options.templateDirectory);
@@ -48,28 +48,46 @@ public class MyBatisGenerator {
     rootMap.put("table", table);
     rootMap.put("options", options);
 
-    // Write out the Java file
-    File javaFile = new File(options.javaDirectory, table.fullJavaClassName.replace('.', '/') + ".java");
+    // Write out the Java domain file
+    File javaFile = new File(options.javaDirectory, table.fullDomainClassName.replace('.', '/') + ".java");
     if (!javaFile.getParentFile().isDirectory() && !javaFile.getParentFile().mkdirs()) {
-      throw new IOException("Unable to create directory for the Java file [" + javaFile.getAbsolutePath() + "]");
+      throw new IOException("Unable to create directory for the Java Domain file [" + javaFile.getAbsolutePath() + "]");
     }
 
-    System.out.println("Writing out the Java file to [" + javaFile.getAbsolutePath() + "]");
-    FileWriter writer = new FileWriter(javaFile);
-    Template template = configuration.getTemplate("java.ftl");
-    template.process(rootMap, writer);
-    writer.close();
+    if (!javaFile.isFile() || options.force) {
+      System.out.println("Writing out the Java file to [" + javaFile.getAbsolutePath() + "]");
+      FileWriter writer = new FileWriter(javaFile);
+      Template template = configuration.getTemplate("java.ftl");
+      template.process(rootMap, writer);
+      writer.close();
+    }
 
-    // Write out the Java file
-    File xmlFile = new File(options.xmlDirectory, table.fullJavaClassName.replace('.', '/') + "Mapper.xml");
+    // Write out the Java mapper file
+    File javaMapperFile = new File(options.javaDirectory, table.fullMapperClassName.replace('.', '/') + ".java");
+    if (!javaMapperFile.getParentFile().isDirectory() && !javaMapperFile.getParentFile().mkdirs()) {
+      throw new IOException("Unable to create directory for the Java Mapper file [" + javaMapperFile.getAbsolutePath() + "]");
+    }
+
+    if (!javaMapperFile.isFile() || options.force) {
+      System.out.println("Writing out the Java Mapper file to [" + javaMapperFile.getAbsolutePath() + "]");
+      FileWriter writer = new FileWriter(javaMapperFile);
+      Template template = configuration.getTemplate("mapper.ftl");
+      template.process(rootMap, writer);
+      writer.close();
+    }
+
+    // Write out the XML file
+    File xmlFile = new File(options.xmlDirectory, table.fullDomainClassName.replace('.', '/') + "Mapper.xml");
     if (!xmlFile.getParentFile().isDirectory() && !xmlFile.getParentFile().mkdirs()) {
       throw new IOException("Unable to create directory for the XML file [" + xmlFile.getAbsolutePath() + "]");
     }
 
-    System.out.println("Writing out the XML file to [" + xmlFile.getAbsolutePath() + "]");
-    writer = new FileWriter(xmlFile);
-    template = configuration.getTemplate("xml.ftl");
-    template.process(rootMap, writer);
-    writer.close();
+    if (!xmlFile.isFile() || options.force) {
+      System.out.println("Writing out the XML file to [" + xmlFile.getAbsolutePath() + "]");
+      FileWriter writer = new FileWriter(xmlFile);
+      Template template = configuration.getTemplate("xml.ftl");
+      template.process(rootMap, writer);
+      writer.close();
+    }
   }
 }

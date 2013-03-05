@@ -14,22 +14,28 @@ import com.inversoft.mybatis.generator.NameUtils;
 public class Table {
   public String name;
   public String shortName;
-  public String javaPackage;
+  public String domainPackage;
+  public String mapperPackage;
   public String javaFieldName;
-  public String shortJavaClassName;
-  public String fullJavaClassName;
+  public String shortDomainClassName;
+  public String fullDomainClassName;
+  public String shortMapperClassName;
+  public String fullMapperClassName;
   public final List<Column> columns = new ArrayList<Column>();
   public final List<Column> primaryKeys = new ArrayList<Column>();
   public final List<Column> foreignKeys = new ArrayList<Column>();
   public final List<Table> associations = new ArrayList<Table>();
 
-  public Table(String name, String javaPackaage) {
+  public Table(String name, String domainPackaage, String mapperPackage) {
     this.name = name;
-    this.javaPackage = javaPackaage;
+    this.domainPackage = domainPackaage;
+    this.mapperPackage = mapperPackage;
     this.shortName = NameUtils.toAcronym(name);
     this.javaFieldName = NameUtils.toJavaName(name, false, false);
-    this.shortJavaClassName = NameUtils.toJavaName(name, true, true);
-    this.fullJavaClassName = this.javaPackage + "." + this.shortJavaClassName;
+    this.shortDomainClassName = NameUtils.toJavaName(name, true, true);
+    this.fullDomainClassName = this.domainPackage + "." + this.shortDomainClassName;
+    this.shortMapperClassName = this.shortDomainClassName + "Mapper";
+    this.fullMapperClassName = this.mapperPackage + "." + this.shortMapperClassName;
   }
 
   public boolean hasNonNullColumn() {
