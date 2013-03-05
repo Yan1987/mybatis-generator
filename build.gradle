@@ -1,0 +1,100 @@
+/*
+ * Copyright (c) 2012, Inversoft, All Rights Reserved.
+ */
+// Project info
+group = "com.inversoft.libraries"
+version = "0.1"
+description = "The MyBatis Generator Project"
+
+// Plugins
+apply plugin: "java"
+apply plugin: "idea"
+apply plugin: "init"
+apply plugin: "database"
+apply plugin: "testng"
+apply plugin: "release"
+
+releasePlugin.publicRepo = false
+
+// Build script config
+buildscript {
+  repositories {
+    ivy {
+      name "inversoftPublic"
+      ivyPattern "http://hawking.inversoft.com/repository/public/[organisation]/[module]/[revision]/ivy.xml"
+      artifactPattern "http://hawking.inversoft.com/repository/public/[organisation]/[module]/[revision]/[type]s/[artifact]-[revision].[ext]"
+    }
+    ivy {
+      url "${project.gradle.gradleUserHomeDir}/integration-cache"
+    }
+  }
+  dependencies {
+    classpath(
+      "org.primeframework.gradle:gradle-init-plugin:0.4",
+      "org.primeframework.gradle:gradle-database-plugin:0.3",
+      "org.primeframework.gradle:gradle-release-plugin:0.11",
+      "org.primeframework.gradle:gradle-testng-plugin:0.7"
+    )
+  }
+}
+
+configurations {
+  license {
+    transitive = false
+  }
+  jsonDatabase {
+    transitive = false
+  }
+  sqlDatabase {
+    transitive = false
+  }
+}
+
+dependencies {
+  compile(
+    "commons-cli:commons-cli:1.2",
+    "mysql:mysql-connector-java:5.1.18",
+    "org.apache.commons:commons-lang3:3.1",
+    "org.freemarker:freemarker:2.3.19",
+    "postgresql:postgresql:9.1-901-1.jdbc4"
+  )
+  testCompile(
+    "org.easymock:easymock:3.1",
+    "org.testng:testng:6.8"
+  )
+}
+
+// Database build steps
+//database.types = [database.mysql, database.postgresql]
+database.types = [database.mysql]
+createDatabaseTest.doLast {
+  println "Seeding databases: ${database.types}"
+
+  database.types.each { dbType ->
+    database.executeSQLFile(dbType, database.testName, "src/test/db/${dbType}.sql", "dev", "dev", true, true);
+  }
+}
+
+// Java config
+sourceCompatibility = 1.6
+jar.doLast {
+  copy {
+    from "src/main/script"
+    into "${project.distsDir}/bin"
+  }
+  copy {
+    from "${project.libsDir}"
+    into "${project.distsDir}/lib"
+  }
+  copy {
+    from configurations.runtime
+    into "${project.distsDir}/lib"
+  }
+
+  ant.chmod(perm: "+x", file: "${project.distsDir}/bin/mybatis-generator")
+}
+
+// Testing
+test {
+  dependsOn "createDatabaseTest"
+}
