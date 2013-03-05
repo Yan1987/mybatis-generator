@@ -1,5 +1,8 @@
 [#ftl/]
 [#-- @ftlvariable name="table" type="com.inversoft.mybatis.generator.domain.Table" --]
+/*
+ * Copyright (c) 2013, Inversoft Inc., All Rights Reserved
+ */
 package ${table.javaPackage};
 
 import java.io.Serializable;

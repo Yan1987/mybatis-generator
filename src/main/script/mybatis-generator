@@ -1,11 +1,15 @@
 #!/bin/bash
 
-dir=$(dirname $0)
-cd $dir/..
+DIR=$(dirname $0)
+HOME=$(cd $DIR/..; pwd)
+
+echo "DIR: $DIR"
+echo "HOME: $HOME"
+echo "PWD: $PWD"
 
 CLASSPATH=
-for f in $(ls lib); do
-  CLASSPATH=lib/$f:$CLASSPATH
+for f in $(ls $HOME/lib); do
+  CLASSPATH=$HOME/lib/$f:$CLASSPATH
 done
 
-java -cp $CLASSPATH -Dhome=$dir com.inversoft.mybatis.generator.Main "$@"
+java -cp $CLASSPATH -Dhome=$HOME com.inversoft.mybatis.generator.Main "$@"

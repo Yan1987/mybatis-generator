@@ -54,6 +54,7 @@ public class MyBatisGenerator {
       throw new IOException("Unable to create directory for the Java file [" + javaFile.getAbsolutePath() + "]");
     }
 
+    System.out.println("Writing out the Java file to [" + javaFile.getAbsolutePath() + "]");
     FileWriter writer = new FileWriter(javaFile);
     Template template = configuration.getTemplate("java.ftl");
     template.process(rootMap, writer);
@@ -65,6 +66,7 @@ public class MyBatisGenerator {
       throw new IOException("Unable to create directory for the XML file [" + xmlFile.getAbsolutePath() + "]");
     }
 
+    System.out.println("Writing out the XML file to [" + xmlFile.getAbsolutePath() + "]");
     writer = new FileWriter(xmlFile);
     template = configuration.getTemplate("xml.ftl");
     template.process(rootMap, writer);

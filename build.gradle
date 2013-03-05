@@ -69,6 +69,10 @@ jar.doLast {
     into "${project.distsDir}/bin"
   }
   copy {
+    from "src/main/templates"
+    into "${project.distsDir}/templates"
+  }
+  copy {
     from "${project.libsDir}"
     into "${project.distsDir}/lib"
   }

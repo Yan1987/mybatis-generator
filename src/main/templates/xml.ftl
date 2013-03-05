@@ -29,7 +29,7 @@
   <sql id="select">
     SELECT
     [#list table.columns as column]
-      ${table.shortName}.${column.name} AS ${table.shortName}_${column.name}
+      ${table.shortName}.${column.name} AS ${table.shortName}_${column.name}[#if column_has_next],[/#if]
     [/#list]
     FROM ${table.name} AS ${table.shortName}
   </sql>

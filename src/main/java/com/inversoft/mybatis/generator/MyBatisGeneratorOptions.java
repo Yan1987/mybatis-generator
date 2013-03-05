@@ -41,6 +41,6 @@ public class MyBatisGeneratorOptions {
 
     this.javaDirectory = new File(commandLine.hasOption("java") ? commandLine.getOptionValue("java") : "src/main/java");
     this.xmlDirectory = new File(commandLine.hasOption("xml") ? commandLine.getOptionValue("xml") : "src/main/resources");
-    this.templateDirectory = new File(commandLine.hasOption("template") ? commandLine.getOptionValue("template") : System.getProperty("home") + "../templates");
+    this.templateDirectory = new File(commandLine.hasOption("template") ? commandLine.getOptionValue("template") : System.getProperty("home") + "/templates");
   }
 }
