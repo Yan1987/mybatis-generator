@@ -5,6 +5,9 @@
  */
 package ${table.domainPackage};
 
+[#if table.hasNonNullColumn()]
+import javax.validation.constraints.NotNull;
+[/#if]
 [#if table.hasStringColumn()]
 import javax.validation.constraints.Size;
 [/#if]
@@ -12,18 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 [#if table.hasStringColumn()]
-import javax.validation.Size;
-  [#if table.hasNonNullColumn()]
 import org.hibernate.validator.constraints.NotBlank;
-  [/#if]
-[#else]
-import javax.validation.NotNull;
 [/#if]
 
 import com.inversoft.cleanspeak.domain.Create;
 import com.inversoft.cleanspeak.domain.Update;
 import com.inversoft.cleanspeak.domain.Identifiable;
 
+/**
+ * Domain object for the ${table.name} table.
+ */
 public class ${table.shortDomainClassName} extends Identifiable {
   private static final long serialVersionUID = 1;
 
@@ -44,6 +45,6 @@ public class ${table.shortDomainClassName} extends Identifiable {
 [/#list]
 
 [#list table.associations as association]
-  public List<${association.shortDomainClassName}> ${association.javaFieldName} = new ArrayList<${association.shortDomainClassName}>();
+  public List<${association.shortDomainClassName}> ${association.pluralJavaFieldName} = new ArrayList<${association.shortDomainClassName}>();
 [/#list]
 }

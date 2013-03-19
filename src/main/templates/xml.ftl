@@ -4,7 +4,7 @@
 [#macro primaryKeyWhereClause table useTableShortName]
     WHERE
   [#list table.primaryKeys as primaryKey]
-      [#if useTableShortName]${table.shortName}[/#if]${primaryKey.name} = ${"#"}{${primaryKey.javaFieldName}}
+      [#if useTableShortName]${table.shortName}.[/#if]${primaryKey.name} = ${"#"}{${primaryKey.javaFieldName}}
   [/#list]
 [/#macro]
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -12,7 +12,7 @@
   ~ Copyright (c) 2013, Inversoft Inc., All Rights Reserved
   -->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="${table.fullDomainClassName}">
+<mapper namespace="${table.fullMapperClassName}">
   <resultMap id="${table.shortDomainClassName}" type="${table.fullDomainClassName}">
     [#if table.primaryKeys?size == 1]
     <id property="${table.primaryKeys[0].javaFieldName}" column="${table.shortName}_${table.primaryKeys[0].name}"/>
@@ -28,22 +28,25 @@
 
   <sql id="select">
     SELECT
+    [#list table.primaryKeys as primaryKey]
+      ${table.shortName}.${primaryKey.name} AS ${table.shortName}_${primaryKey.name}[#if primaryKey_has_next],[/#if]
+    [/#list]
     [#list table.columns as column]
       ${table.shortName}.${column.name} AS ${table.shortName}_${column.name}[#if column_has_next],[/#if]
     [/#list]
     FROM ${table.name} AS ${table.shortName}
   </sql>
 
-  <select id="queryAll" resultMap="${table.shortDomainClassName}">
+  <select id="retrieveAll" resultMap="${table.shortDomainClassName}">
     <include refid="select"/>
   </select>
 
-  <select id="queryById" resultMap="${table.shortDomainClassName}">
+  <select id="retrieveById" resultMap="${table.shortDomainClassName}">
     <include refid="select"/>
     [@primaryKeyWhereClause table true/]
   </select>
 
-  <insert id="insert" parameterType="${table.fullDomainClassName}" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+  <insert id="create" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     INSERT INTO ${table.name} (
     [#list table.columns as column]
       ${column.name}[#if column_has_next],[/#if]
@@ -55,7 +58,7 @@
     )
   </insert>
 
-  <update id="update" parameterType="com.inversoft.cleanspeak.domain.filter.OpenBlacklistEntry">
+  <update id="update">
     UPDATE ${table.name}
     SET
     [#list table.columns as column]
@@ -68,7 +71,7 @@
     [/#if]
   </update>
 
-  <delete id="delete" parameterType="com.inversoft.cleanspeak.domain.filter.OpenBlacklistEntry">
+  <delete id="delete">
     DELETE FROM ${table.name}
     [@primaryKeyWhereClause table false/]
   </delete>

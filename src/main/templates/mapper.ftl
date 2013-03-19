@@ -3,43 +3,51 @@
 /*
  * Copyright (c) 2013, Inversoft Inc., All Rights Reserved
  */
-package ${table.domainPackage};
+package ${table.mapperPackage};
+
+import java.util.List;
 
 import ${table.fullDomainClassName};
 
+/**
+ * Mapper for ${table.shortDomainClassName} instances.
+ */
 public interface ${table.shortMapperClassName} {
   /**
-   * Queries all of the objects from the database.
+   * Retrieves all of the ${table.shortDomainClassName} instances from the database.
    *
-   * @return The list of all the objects in the database.
+   * @return The list of all the ${table.shortDomainClassName} instances in the database.
    */
-  List<${table.shortDomainClassName}> queryAll();
+  List<${table.shortDomainClassName}> retrieveAll();
 
   /**
-   * Queries all of the objects from the database.
+   * Retrieves a single ${table.shortDomainClassName} instance from the database by its primary key.
    *
-   * @return The list of all the objects in the database.
+  [#list table.primaryKeys as primaryKey]
+   * @param ${primaryKey.javaFieldName} The primary key.
+  [/#list]
+   * @return The ${table.shortDomainClassName} instance or null if it doesn't exist.
    */
-  List<${table.shortDomainClassName}> queryById([#list table.primaryKeys as primaryKey]${primaryKey.type.nonNullableName} ${primaryKey.javaFieldName}[#if primaryKey_has_next], [/#if][/#list]);
+  ${table.shortDomainClassName} retrieveById([#list table.primaryKeys as primaryKey]${primaryKey.type.nonNullableName} ${primaryKey.javaFieldName}[#if primaryKey_has_next], [/#if][/#list]);
 
   /**
-   * Creates a new record in the database for the given object.
+   * Creates a new record in the database for the given ${table.shortDomainClassName}.
    *
-   * @param ${table.javaFieldName} The instance to create the record for.
+   * @param ${table.singularJavaFieldName} The instance to create the record for.
    */
-  void create(${table.shortDomainClassName} ${table.javaFieldName});
+  void create(${table.shortDomainClassName} ${table.singularJavaFieldName});
 
   /**
-   * Updates the record in the database for the given object.
+   * Updates the record in the database for the given ${table.shortDomainClassName}.
    *
-   * @param ${table.javaFieldName} The instance to update.
+   * @param ${table.singularJavaFieldName} The instance to update.
    */
-  void update(${table.shortDomainClassName} ${table.javaFieldName});
+  void update(${table.shortDomainClassName} ${table.singularJavaFieldName});
 
   /**
-   * Deletes the record from the database for the given object.
+   * Deletes the record from the database for the given ${table.shortDomainClassName}.
    *
-   * @param ${table.javaFieldName} The instance to delete.
+   * @param ${table.singularJavaFieldName} The instance to delete.
    */
-  void delete(${table.shortDomainClassName} ${table.javaFieldName});
+  void delete(${table.shortDomainClassName} ${table.singularJavaFieldName});
 }

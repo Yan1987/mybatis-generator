@@ -10,7 +10,7 @@ import com.inversoft.mybatis.generator.NameUtils;
  *
  * @author Brian Pontarelli
  */
-public class Column {
+public class Column implements Comparable<Column> {
   public String name;
   public boolean nullable;
   public Type type;
@@ -23,5 +23,10 @@ public class Column {
     this.type = type;
     this.size = size;
     this.javaFieldName = NameUtils.toJavaName(name, false, false);
+  }
+
+  @Override
+  public int compareTo(Column o) {
+    return name.compareTo(o.name);
   }
 }

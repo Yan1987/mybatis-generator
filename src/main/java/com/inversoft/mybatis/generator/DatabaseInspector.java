@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -57,7 +58,7 @@ public class DatabaseInspector {
       resultSet.close();
 
       // Load the columns for the given table
-      Table table = new Table(options.table, options.domainPackage, options.mapperPackage);
+      Table table = new Table(options.table, options.domainPackage, options.mapperPackage, options.testPackage);
       resultSet = metaData.getColumns(null, null, options.table, "%");
       while (resultSet.next()) {
         String name = resultSet.getString("COLUMN_NAME");
@@ -82,9 +83,15 @@ public class DatabaseInspector {
       resultSet = metaData.getExportedKeys(null, null, options.table);
       while (resultSet.next()) {
         String name = resultSet.getString("FKTABLE_NAME");
-        table.associations.add(new Table(name, options.domainPackage, options.mapperPackage));
+        table.associations.add(new Table(name, options.domainPackage, options.mapperPackage, options.testPackage));
       }
       resultSet.close();
+
+      // Sort everything
+      Collections.sort(table.columns);
+      Collections.sort(table.foreignKeys);
+      Collections.sort(table.primaryKeys);
+      Collections.sort(table.associations);
 
       return table;
     } catch (SQLException e) {

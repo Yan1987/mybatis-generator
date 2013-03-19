@@ -30,11 +30,13 @@ public class Main {
     options.addOption(OptionBuilder.withLongOpt("user").withDescription("Database username").isRequired().hasArg().create("u"));
     options.addOption(OptionBuilder.withLongOpt("pass").withDescription("Database password").isRequired().hasArg().create("p"));
     options.addOption(OptionBuilder.withLongOpt("table").withDescription("Database table").isRequired().hasArg().create("t"));
-    options.addOption(OptionBuilder.withLongOpt("pkg").withDescription("Java package to place the generated domain class in").isRequired().hasArg().create("k"));
-    options.addOption(OptionBuilder.withLongOpt("mapperpkg").withDescription("Java package to place the generated mapper class in").hasArg().create("m"));
-    options.addOption(OptionBuilder.withLongOpt("java").withDescription("Directory to put the Java domain class in (defaults to src/main/java)").hasArg().create("v"));
+    options.addOption(OptionBuilder.withLongOpt("domainpkg").withDescription("Java package to place the generated domain class in").isRequired().hasArg().create("k"));
+    options.addOption(OptionBuilder.withLongOpt("mapperpkg").withDescription("Java package to place the generated mapper class in").hasArg().create());
+    options.addOption(OptionBuilder.withLongOpt("testpkg").withDescription("Java package to place the generated test class in").hasArg().create());
+    options.addOption(OptionBuilder.withLongOpt("javamain").withDescription("Directory to put the Java domain class in (defaults to src/main/java)").hasArg().create());
+    options.addOption(OptionBuilder.withLongOpt("javatest").withDescription("Directory to put the Java test class in (defaults to src/test/java)").hasArg().create());
     options.addOption(OptionBuilder.withLongOpt("xml").withDescription("Directory to put the XML in (defaults to src/main/resources)").hasArg().create("x"));
-    options.addOption(OptionBuilder.withLongOpt("template").withDescription("Directory where the FreeMarker templates are stored (defaults to ../templates relative to the directory where the mybatis-generator script is stored)").hasArg().create("e"));
+    options.addOption(OptionBuilder.withLongOpt("template").withDescription("Directory where the FreeMarker templates are stored (defaults to ../templates relative to the directory where the mybatis-generator script is stored)").hasArg().create());
     options.addOption(OptionBuilder.withLongOpt("force").withDescription("Overwrites existing Java and XML files. By default, existing files are not changed.").create("f"));
 
     CommandLineParser parser = new PosixParser();

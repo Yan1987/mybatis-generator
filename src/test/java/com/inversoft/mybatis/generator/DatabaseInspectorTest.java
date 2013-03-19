@@ -9,7 +9,9 @@ import org.testng.annotations.Test;
 
 import com.inversoft.mybatis.generator.domain.Table;
 import com.inversoft.mybatis.generator.domain.Type;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Brian Pontarelli
@@ -19,7 +21,8 @@ public class DatabaseInspectorTest {
   @Test
   public void all() throws Exception {
     MyBatisGeneratorOptions options = new MyBatisGeneratorOptions("jdbc:mysql://localhost:3306/mybatis_generator_test",
-      "dev", "dev", "users", "com.test", "com.test.mapper", new File("src/main/java"), new File("src/main/resources"), new File("templates"), false);
+      "dev", "dev", "users", "com.test", "com.test.mapper", "com.test.test", new File("src/main/java"),
+      new File("src/test/java"), new File("src/main/resources"), new File("templates"), false);
     DatabaseInspector inspector = new DatabaseInspector();
     Table table = inspector.extract(options);
 
@@ -28,15 +31,15 @@ public class DatabaseInspectorTest {
     assertEquals(table.fullDomainClassName, "com.test.User");
     assertEquals(table.shortName, "u");
     assertEquals(table.columns.size(), 3);
-    assertEquals(table.columns.get(0).name, "name");
-    assertEquals(table.columns.get(0).javaFieldName, "name");
-    assertEquals(table.columns.get(0).size, 255);
-    assertEquals(table.columns.get(0).type, Type.STRING);
+    assertEquals(table.columns.get(0).name, "birth_date");
+    assertEquals(table.columns.get(0).javaFieldName, "birthDate");
+    assertEquals(table.columns.get(0).size, 10); // No clue why MySQL sets DATE fields to size 10, but whatever
+    assertEquals(table.columns.get(0).type, Type.DATE);
     assertFalse(table.columns.get(0).nullable);
-    assertEquals(table.columns.get(1).name, "birth_date");
-    assertEquals(table.columns.get(1).javaFieldName, "birthDate");
-    assertEquals(table.columns.get(1).size, 10); // No clue why MySQL sets DATE fields to size 10, but whatever
-    assertEquals(table.columns.get(1).type, Type.DATE);
+    assertEquals(table.columns.get(1).name, "name");
+    assertEquals(table.columns.get(1).javaFieldName, "name");
+    assertEquals(table.columns.get(1).size, 255);
+    assertEquals(table.columns.get(1).type, Type.STRING);
     assertFalse(table.columns.get(1).nullable);
     assertEquals(table.columns.get(2).name, "nickname");
     assertEquals(table.columns.get(2).javaFieldName, "nickname");
@@ -54,7 +57,8 @@ public class DatabaseInspectorTest {
     assertEquals(table.associations.size(), 1);
     assertEquals(table.associations.get(0).name, "addresses");
     assertEquals(table.associations.get(0).shortName, "a");
-    assertEquals(table.associations.get(0).javaFieldName, "addresses");
+    assertEquals(table.associations.get(0).pluralJavaFieldName, "addresses");
+    assertEquals(table.associations.get(0).singularJavaFieldName, "address");
     assertEquals(table.associations.get(0).shortDomainClassName, "Address");
     assertEquals(table.associations.get(0).fullDomainClassName, "com.test.Address");
   }
