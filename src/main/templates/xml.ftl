@@ -14,13 +14,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="${table.fullMapperClassName}">
   <resultMap id="${table.shortDomainClassName}" type="${table.fullDomainClassName}">
-    [#if table.primaryKeys?size == 1]
-    <id property="${table.primaryKeys[0].javaFieldName}" column="${table.shortName}_${table.primaryKeys[0].name}"/>
-    [#else]
-      [#list table.primaryKeys as primaryKey]
-    <result property="${primaryKey.javaFieldName}" column="${table.shortName}_${primaryKey.name}"/>
-      [/#list]
-    [/#if]
+    [#list table.primaryKeys as primaryKey]
+    <id property="${primaryKey.javaFieldName}" column="${table.shortName}_${primaryKey.name}"/>
+    [/#list]
     [#list table.columns as column]
     <result property="${column.javaFieldName}" column="${table.shortName}_${column.name}"/>
     [/#list]
@@ -29,7 +25,7 @@
   <sql id="select">
     SELECT
     [#list table.primaryKeys as primaryKey]
-      ${table.shortName}.${primaryKey.name} AS ${table.shortName}_${primaryKey.name}[#if primaryKey_has_next],[/#if]
+      ${table.shortName}.${primaryKey.name} AS ${table.shortName}_${primaryKey.name},
     [/#list]
     [#list table.columns as column]
       ${table.shortName}.${column.name} AS ${table.shortName}_${column.name}[#if column_has_next],[/#if]
@@ -51,10 +47,23 @@
     [#list table.columns as column]
       ${column.name}[#if column_has_next],[/#if]
     [/#list]
+    [#if table.foreignKeys?size > 0]
+      ,[#t/]
+      [#list table.foreignKeys as key]
+      ${key.name}[#if key_has_next],[/#if]
+      [/#list]
+    [/#if]
     ) VALUES (
     [#list table.columns as column]
       ${"#"}{${column.javaFieldName}}[#if column_has_next],[/#if]
     [/#list]
+    [#if table.foreignKeys?size > 0]
+      ,[#t/]
+      [#list table.foreignKeys as key]
+      ${"#"}{${key.javaFieldName}}[#if key_has_next],[/#if]
+      ${key.name}[#if key_has_next],[/#if]
+      [/#list]
+    [/#if]
     )
   </insert>
 

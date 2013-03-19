@@ -5,25 +5,31 @@
  */
 package ${table.testPackage};
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
+import static org.testng.Assert.assertNotNull;
+
+import ${table.fullMapperClassName};
 
 /**
  * Test for the ${table.shortDomainClassName}.
  */
-@Test(groups = "integration"}
+@Test(groups = "integration")
 public class ${table.shortTestClassName} extends BaseIntegrationTest {
   public ${table.shortMapperClassName} mapper;
 
-  @BeforeClass
+  @BeforeMethod
   public void setupMapper() {
-    ${table.shortMapperClassName} = sqlSession.getMapper(${table.shortMapperClassName}.class);
+    mapper = sqlSession.getMapper(${table.shortMapperClassName}.class);
   }
 
   @Test
   public void create() {
     clearDatabase();
 
+    [@makeDates/]
     ${table.shortDomainClassName} ${table.singularJavaFieldName} = make${table.shortDomainClassName}([@makeCallParams/]);
     mapper.create(${table.singularJavaFieldName});
 
@@ -39,16 +45,7 @@ public class ${table.shortTestClassName} extends BaseIntegrationTest {
   public void retrieveById() throws Exception {
     clearDatabase();
 
-    [#list table.columns as column]
-      [#if column.type == 'DATE']
-    LocalDate today = new LocalDate();
-      [#elseif column.type == 'TIME']
-    LocalTime time = new LocalTime();
-      [#elseif column.type == 'TIMESTAMP']
-    DateTime now = new DateTime();
-      [/#if]
-    [/#list]
-
+    [@makeDates/]
     ${table.shortDomainClassName} ${table.singularJavaFieldName} = make${table.shortDomainClassName}([@makeCallParams/]);
     mapper.create(${table.singularJavaFieldName});
     sqlSession.commit();
@@ -87,16 +84,7 @@ public class ${table.shortTestClassName} extends BaseIntegrationTest {
   public void update() throws Exception {
     clearDatabase();
 
-    [#list table.columns as column]
-      [#if column.type == 'DATE']
-    LocalDate today = new LocalDate();
-      [#elseif column.type == 'TIME']
-    LocalTime time = new LocalTime();
-      [#elseif column.type == 'TIMESTAMP']
-    DateTime now = new DateTime();
-      [/#if]
-    [/#list]
-
+    [@makeDates/]
     ${table.shortDomainClassName} ${table.singularJavaFieldName} = make${table.shortDomainClassName}([@makeCallParams/]);
     mapper.create(${table.singularJavaFieldName});
     sqlSession.commit();
@@ -125,7 +113,7 @@ public class ${table.shortTestClassName} extends BaseIntegrationTest {
       [/#if]
     [/#list]
 
-    dictionaryEntryMapper.update(dictionaryEntry);
+    mapper.update(${table.singularJavaFieldName});
     sqlSession.commit();
 
     ${table.singularJavaFieldName} = mapper.retrieveById(${table.singularJavaFieldName}.id);
@@ -156,6 +144,9 @@ public class ${table.shortTestClassName} extends BaseIntegrationTest {
 
   private ${table.shortDomainClassName} make${table.shortDomainClassName}([@makeParams/]) {
     ${table.shortDomainClassName} ${table.singularJavaFieldName} = new ${table.shortDomainClassName}();
+    [#list table.columns as column]
+    ${table.singularJavaFieldName}.${column.javaFieldName} = ${column.javaFieldName};
+    [/#list]
 
     return ${table.singularJavaFieldName};
   }
@@ -164,53 +155,65 @@ public class ${table.shortTestClassName} extends BaseIntegrationTest {
 [#macro makeParams]
   [#list table.columns as column]
     [#if column.type == 'STRING']
-    String [#rt/]
+String [#rt/]
     [#elseif column.type == 'BINARY']
-    byte[] [#rt/]
+byte[] [#rt/]
     [#elseif column.type == 'BOOLEAN']
-    boolean [#rt/]
+boolean [#rt/]
     [#elseif column.type == 'BYTE']
-    Byte [#rt/]
+Byte [#rt/]
     [#elseif column.type == 'SHORT']
-    Short [#rt/]
+Short [#rt/]
     [#elseif column.type == 'INT' || column.type == 'LONG']
-    Integer [#rt/]
+Integer [#rt/]
     [#elseif column.type == 'FLOAT' || column.type == 'DOUBLE']
-    Float [#rt/]
+Float [#rt/]
     [#elseif column.type == 'DATE']
-    LocalDate [#rt/]
+LocalDate [#rt/]
     [#elseif column.type == 'TIME']
-    LocalTime [#rt/]
+LocalTime [#rt/]
     [#elseif column.type == 'TIMESTAMP']
-    DateTime [#rt/]
+DateTime [#rt/]
     [/#if]
-  ${column.javaFieldName}[#if column_has_next],[/#if][#rt/]
+${column.javaFieldName}[#if column_has_next], [/#if][#rt/]
   [/#list]
 [/#macro]
 
 [#macro makeCallParams]
   [#list table.columns as column]
     [#if column.type == 'STRING']
-"foo" [#rt/]
+"foo"[#rt/]
     [#elseif column.type == 'BINARY']
-"foo".getBytes("UTF-8") [#rt/]
+"foo".getBytes("UTF-8")[#rt/]
     [#elseif column.type == 'BOOLEAN']
-true [#rt/]
+true[#rt/]
     [#elseif column.type == 'BYTE']
-(byte) 42 [#rt/]
+(byte) 42[#rt/]
     [#elseif column.type == 'SHORT']
-(short) 42 [#rt/]
+(short) 42[#rt/]
     [#elseif column.type == 'INT' || column.type == 'LONG']
-42 [#rt/]
+42[#rt/]
     [#elseif column.type == 'FLOAT' || column.type == 'DOUBLE']
-42.0 [#rt/]
+42.0[#rt/]
     [#elseif column.type == 'DATE']
-today [#rt/]
+today[#rt/]
     [#elseif column.type == 'TIME']
-time [#rt/]
+time[#rt/]
     [#elseif column.type == 'TIMESTAMP']
-now [#rt/]
+now[#rt/]
     [/#if]
-  ${column.javaFieldName}[#if column_has_next],[/#if][#rt/]
+[#if column_has_next], [/#if][#rt/]
+  [/#list]
+[/#macro]
+
+[#macro makeDates]
+  [#list table.columns as column]
+    [#if column.type == 'DATE']
+    LocalDate today = new LocalDate();
+    [#elseif column.type == 'TIME']
+    LocalTime time = new LocalTime();
+    [#elseif column.type == 'TIMESTAMP']
+    DateTime now = new DateTime();
+    [/#if]
   [/#list]
 [/#macro]

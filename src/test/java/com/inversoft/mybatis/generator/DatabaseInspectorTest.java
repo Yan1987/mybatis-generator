@@ -30,22 +30,27 @@ public class DatabaseInspectorTest {
     assertEquals(table.shortDomainClassName, "User");
     assertEquals(table.fullDomainClassName, "com.test.User");
     assertEquals(table.shortName, "u");
-    assertEquals(table.columns.size(), 3);
+    assertEquals(table.columns.size(), 4);
     assertEquals(table.columns.get(0).name, "birth_date");
     assertEquals(table.columns.get(0).javaFieldName, "birthDate");
     assertEquals(table.columns.get(0).size, 10); // No clue why MySQL sets DATE fields to size 10, but whatever
     assertEquals(table.columns.get(0).type, Type.DATE);
     assertFalse(table.columns.get(0).nullable);
-    assertEquals(table.columns.get(1).name, "name");
-    assertEquals(table.columns.get(1).javaFieldName, "name");
-    assertEquals(table.columns.get(1).size, 255);
-    assertEquals(table.columns.get(1).type, Type.STRING);
-    assertFalse(table.columns.get(1).nullable);
-    assertEquals(table.columns.get(2).name, "nickname");
-    assertEquals(table.columns.get(2).javaFieldName, "nickname");
-    assertEquals(table.columns.get(2).size, 32);
+    assertEquals(table.columns.get(1).name, "male");
+    assertEquals(table.columns.get(1).javaFieldName, "male");
+    assertEquals(table.columns.get(1).size, 1);
+    assertEquals(table.columns.get(1).type, Type.BOOLEAN);
+    assertTrue(table.columns.get(1).nullable);
+    assertEquals(table.columns.get(2).name, "name");
+    assertEquals(table.columns.get(2).javaFieldName, "name");
+    assertEquals(table.columns.get(2).size, 255);
     assertEquals(table.columns.get(2).type, Type.STRING);
-    assertTrue(table.columns.get(2).nullable);
+    assertFalse(table.columns.get(2).nullable);
+    assertEquals(table.columns.get(3).name, "nickname");
+    assertEquals(table.columns.get(3).javaFieldName, "nickname");
+    assertEquals(table.columns.get(3).size, 32);
+    assertEquals(table.columns.get(3).type, Type.STRING);
+    assertTrue(table.columns.get(3).nullable);
 
     assertEquals(table.primaryKeys.size(), 1);
     assertEquals(table.primaryKeys.get(0).name, "id");

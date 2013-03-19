@@ -3,6 +3,7 @@ CREATE TABLE users (
   name       VARCHAR(255) NOT NULL,
   birth_date DATE         NOT NULL,
   nickname   VARCHAR(32)  NULL,
+  male       BIT(1)       NULL,
   PRIMARY KEY (id)
 )
   ENGINE = innodb
